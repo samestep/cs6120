@@ -1,0 +1,13 @@
+{
+  "[python]": {
+    "editor.rulers": [
+      88
+    ]
+  },
+  "python.formatting.provider": "black",
+  "python.linting.flake8Enabled": true,
+  "python.testing.pytestArgs": [
+    "."
+  ],
+  "python.testing.pytestEnabled": true
+}
