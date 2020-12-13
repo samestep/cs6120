@@ -2,12 +2,13 @@ from pathlib import Path
 
 import lesson1 as l1
 
-asms = [(Path(__file__).parent / f"asm{n}.txt").read_text() for n in range(3)]
-parsed = [l1.parse_asm(asm) for asm in asms]
+
+def asm(n):
+    return (Path(__file__).parent / f"asm{n}.txt").read_text()
 
 
 def test_parse():
-    assert parsed[0] == {
+    assert l1.parse_asm(asm(0)) == {
         "instrs": [
             "v: int = const 4",
             "jmp .somewhere",
@@ -62,7 +63,7 @@ def test_basic_blocks():
             ],
         },
     }
-    assert l1.basic_blocks(parsed[0]["instrs"]) == out
+    assert l1.basic_blocks(l1.parse_asm(asm(0))["instrs"]) == out
 
 
 def test_basic_blocks_maximal():
