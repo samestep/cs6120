@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import lesson1 as l1
+import lesson_2 as l2
 
 
 def asm(n):
@@ -8,7 +8,7 @@ def asm(n):
 
 
 def test_parse_0():
-    assert l1.parse_asm(asm(0)) == {
+    assert l2.parse_asm(asm(0)) == {
         "instrs": [
             "v: int = const 4",
             "jmp .somewhere",
@@ -20,7 +20,7 @@ def test_parse_0():
 
 
 def test_parse_1():
-    assert l1.parse_asm(asm(1)) == {
+    assert l2.parse_asm(asm(1)) == {
         "instrs": [
             "v: int = const 4",
             "b: bool = const false",
@@ -34,7 +34,7 @@ def test_parse_1():
 
 
 def test_parse_2():
-    assert l1.parse_asm(asm(2)) == {
+    assert l2.parse_asm(asm(2)) == {
         "instrs": [
             "v0: int = const 8",
             "value: int = id v0",
@@ -66,27 +66,27 @@ def test_parse_2():
 
 
 def test_is_label():
-    assert not l1.is_label("v: int = const 4")
-    assert not l1.is_label("jmp .somewhere")
-    assert l1.is_label(".somewhere:")
-    assert not l1.is_label("print v")
+    assert not l2.is_label("v: int = const 4")
+    assert not l2.is_label("jmp .somewhere")
+    assert l2.is_label(".somewhere:")
+    assert not l2.is_label("print v")
 
 
 def test_label_name():
-    assert l1.label_name(".somewhere:") == ".somewhere"
+    assert l2.label_name(".somewhere:") == ".somewhere"
 
 
 def test_is_terminator():
-    assert not l1.is_terminator("v: int = const 4")
-    assert l1.is_terminator("jmp .somewhere")
-    assert not l1.is_terminator(".somewhere:")
-    assert not l1.is_terminator("print v")
-    assert l1.is_terminator("br b .there .here")
+    assert not l2.is_terminator("v: int = const 4")
+    assert l2.is_terminator("jmp .somewhere")
+    assert not l2.is_terminator(".somewhere:")
+    assert not l2.is_terminator("print v")
+    assert l2.is_terminator("br b .there .here")
 
 
 def test_labels_referenced():
-    assert l1.labels_referenced("jmp .somewhere") == [".somewhere"]
-    assert l1.labels_referenced("br b .there .here") == [".there", ".here"]
+    assert l2.labels_referenced("jmp .somewhere") == [".somewhere"]
+    assert l2.labels_referenced("br b .there .here") == [".there", ".here"]
 
 
 def test_basic_blocks_0():
@@ -107,7 +107,7 @@ def test_basic_blocks_0():
             ".somewhere": 2,
         },
     }
-    assert l1.basic_blocks(l1.parse_asm(asm(0))["instrs"]) == out
+    assert l2.basic_blocks(l2.parse_asm(asm(0))["instrs"]) == out
 
 
 def test_basic_blocks_1():
@@ -130,7 +130,7 @@ def test_basic_blocks_1():
             ".there": 2,
         },
     }
-    assert l1.basic_blocks(l1.parse_asm(asm(1))["instrs"]) == out
+    assert l2.basic_blocks(l2.parse_asm(asm(1))["instrs"]) == out
 
 
 def test_basic_blocks_2():
@@ -173,7 +173,7 @@ def test_basic_blocks_2():
             ".for.end": 3,
         },
     }
-    assert l1.basic_blocks(l1.parse_asm(asm(2))["instrs"]) == out
+    assert l2.basic_blocks(l2.parse_asm(asm(2))["instrs"]) == out
 
 
 def test_basic_blocks_maximal():
@@ -191,32 +191,32 @@ def test_basic_blocks_maximal():
         ],
         "lbl2block": {},
     }
-    assert l1.basic_blocks(instrs) == out
+    assert l2.basic_blocks(instrs) == out
 
 
 def test_cfg_0():
-    blocks = l1.basic_blocks(l1.parse_asm(asm(0))["instrs"])
+    blocks = l2.basic_blocks(l2.parse_asm(asm(0))["instrs"])
     out = {
         0: [".somewhere"],
         1: [".somewhere"],
     }
-    assert l1.cfg(blocks["blocks"], blocks["lbl2block"]) == out
+    assert l2.cfg(blocks["blocks"], blocks["lbl2block"]) == out
 
 
 def test_cfg_1():
-    blocks = l1.basic_blocks(l1.parse_asm(asm(1))["instrs"])
+    blocks = l2.basic_blocks(l2.parse_asm(asm(1))["instrs"])
     out = {
         0: [".there", ".here"],
         ".here": [".there"],
     }
-    assert l1.cfg(blocks["blocks"], blocks["lbl2block"]) == out
+    assert l2.cfg(blocks["blocks"], blocks["lbl2block"]) == out
 
 
 def test_cfg_2():
-    blocks = l1.basic_blocks(l1.parse_asm(asm(2))["instrs"])
+    blocks = l2.basic_blocks(l2.parse_asm(asm(2))["instrs"])
     out = {
         0: [".for.cond"],
         ".for.cond": [".for.body", ".for.end"],
         ".for.body": [".for.cond"],
     }
-    assert l1.cfg(blocks["blocks"], blocks["lbl2block"]) == out
+    assert l2.cfg(blocks["blocks"], blocks["lbl2block"]) == out
