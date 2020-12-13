@@ -1,0 +1,4 @@
+digraph main {
+    "0" -> "somewhere";
+    "1" -> "somewhere";
+}

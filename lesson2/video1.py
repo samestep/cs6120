@@ -1,3 +1,6 @@
+import lesson2.common as l2common
+
+
 def parse_asm(asm):
     return {"instrs": [i.strip().replace(";", "") for i in asm.splitlines()[1:-1]]}
 
@@ -7,7 +10,7 @@ def is_label(i):
 
 
 def label_name(i):
-    return i[:-1]
+    return i[1:-1]
 
 
 def is_terminator(i):
@@ -16,47 +19,21 @@ def is_terminator(i):
 
 def labels_referenced(i):
     split = i.split(" ")
+    labels = None
     if split[0] == "jmp":
-        return [split[1]]
+        labels = [split[1]]
     elif split[0] == "br":
-        return split[2:]
+        labels = split[2:]
+    if labels:
+        return [label[1:] for label in labels]
 
 
-def basic_blocks(instrs):
-    labels = set()
-    for i in instrs:
-        if is_terminator(i):
-            labels |= set(labels_referenced(i))
-    blocks = []
-    block = []
-    lbl2block = {}
-    lbl = None
-    for i in instrs:
-        if not is_label(i):
-            block.append(i)
-        if (is_label(i) and label_name(i) in labels) or is_terminator(i):
-            if block:
-                if lbl:
-                    lbl2block[lbl] = len(blocks)
-                blocks.append(block)
-            block = []
-            lbl = label_name(i) if is_label(i) else None
-    if block:
-        if lbl:
-            lbl2block[lbl] = len(blocks)
-        blocks.append(block)
-    return {"blocks": blocks, "lbl2block": lbl2block}
+basic_blocks = l2common.basic_blocks_fn(
+    is_label=is_label,
+    label_name=label_name,
+    is_terminator=is_terminator,
+    labels_referenced=labels_referenced,
+)
 
 
-def cfg(blocks, lbl2block):
-    block2lbl = {v: k for k, v in lbl2block.items()}
-    graph = {}
-    for index, block in enumerate(blocks):
-        key = block2lbl.get(index, index)
-        last = block[-1]
-        if is_terminator(last):
-            graph[key] = labels_referenced(last)
-        elif index + 1 < len(blocks):
-            after = index + 1
-            graph[key] = [block2lbl.get(after, after)]
-    return graph
+cfg = l2common.cfg_fn(is_terminator=is_terminator, labels_referenced=labels_referenced)

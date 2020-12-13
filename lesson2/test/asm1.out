@@ -1,0 +1,5 @@
+digraph main {
+    "0" -> "there";
+    "0" -> "here";
+    "here" -> "there";
+}

@@ -1,0 +1,6 @@
+digraph main {
+    "0" -> "for.cond";
+    "for.cond" -> "for.body";
+    "for.cond" -> "for.end";
+    "for.body" -> "for.cond";
+}

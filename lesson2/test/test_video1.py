@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import video1 as l2v1
+import lesson2.video1 as l2v1
 
 
 def asm(n):
@@ -73,7 +73,7 @@ def test_is_label():
 
 
 def test_label_name():
-    assert l2v1.label_name(".somewhere:") == ".somewhere"
+    assert l2v1.label_name(".somewhere:") == "somewhere"
 
 
 def test_is_terminator():
@@ -85,8 +85,8 @@ def test_is_terminator():
 
 
 def test_labels_referenced():
-    assert l2v1.labels_referenced("jmp .somewhere") == [".somewhere"]
-    assert l2v1.labels_referenced("br b .there .here") == [".there", ".here"]
+    assert l2v1.labels_referenced("jmp .somewhere") == ["somewhere"]
+    assert l2v1.labels_referenced("br b .there .here") == ["there", "here"]
 
 
 def test_basic_blocks_0():
@@ -104,7 +104,7 @@ def test_basic_blocks_0():
             ],
         ],
         "lbl2block": {
-            ".somewhere": 2,
+            "somewhere": 2,
         },
     }
     assert l2v1.basic_blocks(l2v1.parse_asm(asm(0))["instrs"]) == out
@@ -126,8 +126,8 @@ def test_basic_blocks_1():
             ],
         ],
         "lbl2block": {
-            ".here": 1,
-            ".there": 2,
+            "here": 1,
+            "there": 2,
         },
     }
     assert l2v1.basic_blocks(l2v1.parse_asm(asm(1))["instrs"]) == out
@@ -168,9 +168,9 @@ def test_basic_blocks_2():
             ],
         ],
         "lbl2block": {
-            ".for.cond": 1,
-            ".for.body": 2,
-            ".for.end": 3,
+            "for.cond": 1,
+            "for.body": 2,
+            "for.end": 3,
         },
     }
     assert l2v1.basic_blocks(l2v1.parse_asm(asm(2))["instrs"]) == out
@@ -197,8 +197,8 @@ def test_basic_blocks_maximal():
 def test_cfg_0():
     blocks = l2v1.basic_blocks(l2v1.parse_asm(asm(0))["instrs"])
     out = {
-        0: [".somewhere"],
-        1: [".somewhere"],
+        0: ["somewhere"],
+        1: ["somewhere"],
     }
     assert l2v1.cfg(blocks["blocks"], blocks["lbl2block"]) == out
 
@@ -206,8 +206,8 @@ def test_cfg_0():
 def test_cfg_1():
     blocks = l2v1.basic_blocks(l2v1.parse_asm(asm(1))["instrs"])
     out = {
-        0: [".there", ".here"],
-        ".here": [".there"],
+        0: ["there", "here"],
+        "here": ["there"],
     }
     assert l2v1.cfg(blocks["blocks"], blocks["lbl2block"]) == out
 
@@ -215,8 +215,8 @@ def test_cfg_1():
 def test_cfg_2():
     blocks = l2v1.basic_blocks(l2v1.parse_asm(asm(2))["instrs"])
     out = {
-        0: [".for.cond"],
-        ".for.cond": [".for.body", ".for.end"],
-        ".for.body": [".for.cond"],
+        0: ["for.cond"],
+        "for.cond": ["for.body", "for.end"],
+        "for.body": ["for.cond"],
     }
     assert l2v1.cfg(blocks["blocks"], blocks["lbl2block"]) == out
