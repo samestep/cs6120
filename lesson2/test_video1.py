@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import video_1 as l2v1
+import video1 as l2v1
 
 
 def asm(n):
