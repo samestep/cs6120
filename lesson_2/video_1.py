@@ -26,8 +26,7 @@ def basic_blocks(instrs):
     labels = set()
     for i in instrs:
         if is_terminator(i):
-            for label in labels_referenced(i):
-                labels.add(label)
+            labels |= set(labels_referenced(i))
     blocks = []
     block = []
     lbl2block = {}
