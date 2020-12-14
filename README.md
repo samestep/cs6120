@@ -6,6 +6,10 @@ To see some pretty control-flow graphs:
 ```bash
 dot lesson2/test/asm$(shuf -en1 0 1 2).out -Tpng -o cfg.png
 ```
+Or to run some benchmarks:
+```
+brench benchmarks.toml
+```
 Or to run some probably-boring checks:
 ```bash
 ./checks.sh
