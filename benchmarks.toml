@@ -6,3 +6,10 @@ pipeline = [
     "bril2json",
     "brili -p {args}",
 ]
+
+[runs.lesson2]
+pipeline = [
+    "bril2json",
+    "lesson2/transform.py",
+    "brili -p {args}",
+]
